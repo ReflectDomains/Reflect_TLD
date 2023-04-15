@@ -1,14 +1,15 @@
 import {
 	Box,
-	Collapse,
+	Popper,
 	Input,
 	List,
 	ListItem,
 	Stack,
 	Typography,
 	styled,
+	Fade,
 } from '@mui/material';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -42,6 +43,7 @@ const PopoverList = styled(List)(({ theme }) => ({
 	background: '#fff',
 	borderRadius: theme.spacing(1),
 	marginTop: theme.spacing(1),
+	width: '580px',
 }));
 
 const PopoverListItem = styled(ListItem)(() => ({
@@ -93,8 +95,18 @@ const list = [
 
 const SearchInput = () => {
 	const navigate = useNavigate();
+	const boxRef = useRef(null);
 	const [searchValue, setSearchValue] = useState();
 	const [isFocus, setFocus] = useState(false);
+
+	const [anchorEl, setAnchorEl] = useState(null);
+
+	const handleClick = (event) => {
+		setAnchorEl(boxRef?.current);
+		setFocus((previousOpen) => !previousOpen);
+	};
+	const canBeOpen = isFocus && Boolean(anchorEl);
+	const id = canBeOpen ? 'spring-popper' : undefined;
 
 	const handleChange = useCallback((e) => {
 		const value = e.target.value;
@@ -106,7 +118,7 @@ const SearchInput = () => {
 	}, []);
 
 	return (
-		<SearchWrapper>
+		<SearchWrapper aria-describedby={id} ref={boxRef} onClick={handleClick}>
 			<Search
 				value={searchValue}
 				placeholder="Search for top-level domain / domain name"
@@ -122,47 +134,49 @@ const SearchInput = () => {
 					) : null
 				}
 				onChange={handleChange}
-				onFocus={() => {
-					setFocus(true);
-				}}
-				onBlur={() => {
-					setTimeout(() => {
-						setFocus(false);
-					}, [200]);
-				}}
+				onBlur={handleClick}
 			/>
-
-			<Collapse in={isFocus}>
-				<PopoverList>
-					{list.map((item, index) => (
-						<PopoverListItem
-							key={item.name}
-							onClick={() => {
-								console.log(item.status, 'status');
-								if (item.status === 'Available') {
-									console.log(item.status, 'navigate');
-									navigate(`/register/${item.name}`);
-								}
-							}}
-						>
-							<ListItemTitle>{item.name}</ListItemTitle>
-							<Stack
-								direction="row"
-								alignItems="center"
-								justifyContent="center"
-								spacing={1}
-							>
-								<RegisterStatus status={item.status}>
-									{item.status}
-								</RegisterStatus>
-								<ChevronRightIcon
-									sx={(theme) => ({ color: theme.color.mentionColor })}
-								/>
-							</Stack>
-						</PopoverListItem>
-					))}
-				</PopoverList>
-			</Collapse>
+			<Popper
+				id={id}
+				open={isFocus}
+				anchorEl={anchorEl}
+				transition
+				placement="bottom-start"
+			>
+				{({ TransitionProps }) => (
+					<Fade {...TransitionProps} timeout={350}>
+						<PopoverList>
+							{list.map((item, index) => (
+								<PopoverListItem
+									key={item.name}
+									onClick={() => {
+										console.log(item.status, 'status');
+										if (item.status === 'Available') {
+											console.log(item.status, 'navigate');
+											navigate(`/register/${item.name}`);
+										}
+									}}
+								>
+									<ListItemTitle>{item.name}</ListItemTitle>
+									<Stack
+										direction="row"
+										alignItems="center"
+										justifyContent="center"
+										spacing={1}
+									>
+										<RegisterStatus status={item.status}>
+											{item.status}
+										</RegisterStatus>
+										<ChevronRightIcon
+											sx={(theme) => ({ color: theme.color.mentionColor })}
+										/>
+									</Stack>
+								</PopoverListItem>
+							))}
+						</PopoverList>
+					</Fade>
+				)}
+			</Popper>
 		</SearchWrapper>
 	);
 };
