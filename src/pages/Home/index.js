@@ -2,6 +2,8 @@ import { Stack, Typography, styled } from '@mui/material';
 import PopularDomainCard from './PopularDomainCard';
 import avatar from '../../assets/images/avatar.png';
 import SearchInput from '../../components/SearchInput';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Title = styled(Typography)(() => ({
 	fontSize: '36px',
@@ -18,6 +20,15 @@ const PopularDomainsText = styled(Typography)(({ theme }) => ({
 }));
 
 const Home = () => {
+	const navigate = useNavigate();
+	const chooseDomain = useCallback(
+		(item) => {
+			if (item.status === 'Available') {
+				navigate(`/launch/${item.name}`);
+			}
+		},
+		[navigate]
+	);
 	return (
 		<>
 			<Title>
@@ -25,7 +36,11 @@ const Home = () => {
 			</Title>
 
 			<Stack alignItems="center" sx={(theme) => ({ mt: theme.spacing(6) })}>
-				<SearchInput />
+				<SearchInput
+					width={600}
+					onChange={chooseDomain}
+					placeholder="Search for top-level domain / domain name"
+				/>
 			</Stack>
 
 			<PopularDomainsText>🔥 Recommended TLDs</PopularDomainsText>

@@ -1,11 +1,10 @@
-import { Box, Stack, Typography, styled, Popover } from '@mui/material';
+import { Box, Stack, Typography, styled } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { memo, useCallback, useState } from 'react';
 import CommonPage from '../../components/CommonUI/CommonPage';
 import { useParams } from 'react-router-dom';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
-import StepThree from './StepThree';
 import LastStep from './LastStep';
 import StepAndCircleProcess from './StepAndCircleProcess';
 
@@ -23,12 +22,12 @@ export const TypographyInfo = styled(Typography)(({ theme, sx }) => ({
 	...sx,
 }));
 
-const Register = () => {
+const Launch = () => {
 	const params = useParams();
 	const [step, setStep] = useState(1);
 
 	const nextPage = useCallback(() => {
-		if (step + 1 <= 4) {
+		if (step + 1 <= 3) {
 			setStep(parseInt(step + 1));
 		}
 	}, [step]);
@@ -41,14 +40,12 @@ const Register = () => {
 
 	return (
 		<Box>
-			<CommonPage title="Registration">
+			<CommonPage title="Launch">
 				<TypographySubtitle>Basic Info</TypographySubtitle>
 				<TypographyInfo sx={{ mt: '10px' }}>
-					Subname: {params?.name}
+					Top-level domain: {params?.name}
 				</TypographyInfo>
-				<TypographyInfo sx={{ mt: '10px' }}>
-					Expiry:until 2025.x.x (xx days)
-				</TypographyInfo>
+				<TypographyInfo sx={{ mt: '10px' }}>Status: available</TypographyInfo>
 				<TypographySubtitle sx={{ marginTop: '30px' }}>
 					Process
 				</TypographySubtitle>
@@ -59,25 +56,21 @@ const Register = () => {
 						mt: '10px',
 					}}
 				>
-					{step < 4 ? <StepAndCircleProcess step={step} /> : <LastStep />}
+					{step <= 2 ? <StepAndCircleProcess step={step} /> : <LastStep />}
 				</Stack>
-				<Box
-					sx={{
-						backgroundColor: step < 4 ? '#F7F7F7' : '#fff',
-						borderRadius: '10px',
-						width: '100%',
-						padding: '20px',
-					}}
-				>
-					{step === 1 ? (
-						<StepOne />
-					) : step === 2 ? (
-						<StepTwo />
-					) : step === 3 ? (
-						<StepThree />
-					) : null}
-				</Box>
-				{step < 4 ? (
+				{step <= 2 ? (
+					<Box
+						sx={{
+							backgroundColor: step < 4 ? '#F7F7F7' : '#fff',
+							borderRadius: '10px',
+							width: '100%',
+							padding: '20px',
+						}}
+					>
+						{step === 1 ? <StepOne /> : step === 2 ? <StepTwo /> : null}
+					</Box>
+				) : null}
+				{step <= 2 ? (
 					<Stack
 						flexDirection="row"
 						justifyContent="center"
@@ -104,4 +97,4 @@ const Register = () => {
 	);
 };
 
-export default memo(Register);
+export default memo(Launch);

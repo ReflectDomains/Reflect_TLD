@@ -26,13 +26,12 @@ const LastStep = () => {
 				Complete
 			</TypographyInfo>
 			<LoadingButton
-				variant="outlined"
-				sx={{ background: 'transparent' }}
+				variant="contained"
 				onClick={() => {
 					navigate('/profile');
 				}}
 			>
-				View my Subname
+				Confirm Release
 			</LoadingButton>
 		</Stack>
 	);

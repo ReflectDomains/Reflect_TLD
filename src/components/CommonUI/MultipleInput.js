@@ -14,7 +14,7 @@ const MultipleInput = ({
 	label,
 	labelSx,
 	width = 350,
-	inputSx = {},
+	inputsx = {},
 	...props
 }) => {
 	return (
@@ -28,7 +28,7 @@ const MultipleInput = ({
 					sx={(theme) => ({
 						marginTop: theme.spacing(1),
 						width: `${width}px`,
-						...inputSx,
+						...inputsx,
 					})}
 				/>
 				{props?.value?.length > 0 ? (

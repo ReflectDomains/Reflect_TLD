@@ -13,13 +13,12 @@ import { memo, useCallback, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useNavigate } from 'react-router-dom';
 
-const SearchWrapper = styled(Box)(() => ({
-	width: '600px',
+const SearchWrapper = styled(Box)(({ width }) => ({
+	width: width,
 }));
 
-const Search = styled(Input)(({ theme }) => ({
+const Search = styled(Input)(({ inputsx }) => ({
 	width: '100%',
 	height: '44px',
 	border: 'none',
@@ -32,6 +31,7 @@ const Search = styled(Input)(({ theme }) => ({
 	'&.Mui-focused': {
 		border: 'none',
 	},
+	...inputsx,
 }));
 
 const ClearButton = styled(CloseIcon)(() => ({
@@ -39,11 +39,11 @@ const ClearButton = styled(CloseIcon)(() => ({
 	cursor: 'pointer',
 }));
 
-const PopoverList = styled(List)(({ theme }) => ({
+const PopoverList = styled(List)(({ theme, width }) => ({
 	background: '#fff',
 	borderRadius: theme.spacing(1),
 	marginTop: theme.spacing(1),
-	width: '580px',
+	width: width - 20,
 }));
 
 const PopoverListItem = styled(ListItem)(() => ({
@@ -79,34 +79,40 @@ const RegisterStatus = styled(Box)(({ theme, ...props }) => ({
 
 const list = [
 	{
-		name: 'Registered.reflect.eth',
+		name: '.city',
 		status: 'Registered',
 	},
 	{
-		name: 'Available.reflect.eth',
+		name: '.bit',
 		status: 'Available',
 	},
 
 	{
-		name: 'Unsupported.reflect.eth',
+		name: '.uni',
 		status: 'Unsupported',
 	},
 ];
 
-const SearchInput = () => {
-	const navigate = useNavigate();
+const SearchInput = ({
+	onChange,
+	sx = {},
+	inputsx = {},
+	placeholder = '',
+	width = '600',
+}) => {
 	const boxRef = useRef(null);
-	const [searchValue, setSearchValue] = useState();
+	const [searchValue, setSearchValue] = useState('');
 	const [isFocus, setFocus] = useState(false);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 
-	const handleClick = (event) => {
-		setAnchorEl(boxRef?.current);
-		setFocus((previousOpen) => !previousOpen);
-	};
 	const canBeOpen = isFocus && Boolean(anchorEl);
 	const id = canBeOpen ? 'spring-popper' : undefined;
+
+	const handleClick = (status) => {
+		setAnchorEl(boxRef?.current);
+		setFocus(status);
+	};
 
 	const handleChange = useCallback((e) => {
 		const value = e.target.value;
@@ -117,11 +123,23 @@ const SearchInput = () => {
 		setSearchValue('');
 	}, []);
 
+	const chooseDomain = useCallback(
+		(status) => {
+			onChange && onChange(status);
+		},
+		[onChange]
+	);
+
 	return (
-		<SearchWrapper aria-describedby={id} ref={boxRef} onClick={handleClick}>
+		<SearchWrapper
+			aria-describedby={id}
+			ref={boxRef}
+			sx={{ ...sx }}
+			width={width}
+		>
 			<Search
 				value={searchValue}
-				placeholder="Search for top-level domain / domain name"
+				placeholder={placeholder}
 				disableUnderline={true}
 				startAdornment={<SearchIcon sx={{ marginRight: '10px' }} />}
 				endAdornment={
@@ -133,8 +151,10 @@ const SearchInput = () => {
 						/>
 					) : null
 				}
+				onFocus={handleClick.bind(this, true)}
 				onChange={handleChange}
-				onBlur={handleClick}
+				onBlur={handleClick.bind(this, false)}
+				inputsx={{ ...inputsx }}
 			/>
 			<Popper
 				id={id}
@@ -142,20 +162,15 @@ const SearchInput = () => {
 				anchorEl={anchorEl}
 				transition
 				placement="bottom-start"
+				sx={{ zIndex: 10000 }}
 			>
 				{({ TransitionProps }) => (
 					<Fade {...TransitionProps} timeout={350}>
-						<PopoverList>
-							{list.map((item, index) => (
+						<PopoverList width={width}>
+							{list.map((item) => (
 								<PopoverListItem
 									key={item.name}
-									onClick={() => {
-										console.log(item.status, 'status');
-										if (item.status === 'Available') {
-											console.log(item.status, 'navigate');
-											navigate(`/register/${item.name}`);
-										}
-									}}
+									onClick={chooseDomain.bind(this, item)}
 								>
 									<ListItemTitle>{item.name}</ListItemTitle>
 									<Stack

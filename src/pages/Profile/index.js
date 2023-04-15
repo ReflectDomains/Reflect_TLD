@@ -6,9 +6,9 @@ import CommonAvatar from '../../components/CommonAvatar';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { TabContext, TabList } from '@mui/lab';
 import { useState } from 'react';
-import SubNames from './SubNames';
-import Domains from './Domains';
 import Portfolio from './Portfolio';
+import { Disc, M, Tel, Twi } from '../../assets';
+import TLDS from './TLDS';
 
 const ProfileBackground = styled(Box)(() => ({
 	width: '100%',
@@ -46,14 +46,14 @@ const ProfileTab = styled(Tab)(({ theme }) => ({
 const Profile = () => {
 	const navigate = useNavigate();
 	// portfolio | subNames | domains
-	const [tabValue, setTabValue] = useState('portfolio');
+	const [tabValue, setTabValue] = useState('tlds');
 
 	const handleChangeTab = (_, newValue) => {
 		setTabValue(newValue);
 	};
 
 	return (
-		<CommonPage title="Profile" sx={(theme) => ({ padding: '0' })}>
+		<CommonPage title="Profile" sx={() => ({ padding: '0' })}>
 			{/* background image */}
 			<ProfileBackground>
 				<Box
@@ -79,7 +79,15 @@ const Profile = () => {
 				<UserBasicInfo>
 					<CommonAvatar avatar={avatar} scope={100} />
 					<Box>
-						<Name>Jassen</Name>
+						<Stack direction="row" alignItems="center">
+							<Name>Jassen</Name>
+							<Stack direction="row" spacing={1} sx={{ ml: 3 }}>
+								<Disc />
+								<Twi />
+								<M />
+								<Tel />
+							</Stack>
+						</Stack>
 						<Bio>This is a Web3 Reflect domain</Bio>
 					</Box>
 				</UserBasicInfo>
@@ -109,17 +117,11 @@ const Profile = () => {
 								value="portfolio"
 								sx={(theme) => ({ borderRadius: theme.spacing(2, 0, 0, 0) })}
 							/>
-							<ProfileTab label="SubNames" value="subNames" />
-							<ProfileTab
-								label="Domains"
-								value="domains"
-								sx={(theme) => ({ borderRadius: theme.spacing(0, 2, 0, 0) })}
-							/>
+							<ProfileTab label="TLDs" value="tlds" />
 						</TabList>
 					</Box>
 					{tabValue === 'portfolio' && <Portfolio />}
-					{tabValue === 'subNames' && <SubNames />}
-					{tabValue === 'domains' && <Domains />}
+					{tabValue === 'tlds' && <TLDS />}
 				</TabContext>
 			</Box>
 		</CommonPage>

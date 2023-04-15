@@ -1,9 +1,14 @@
-import { Box, MenuItem, Select, Stack, styled } from '@mui/material';
+import {
+	Box,
+	Stack,
+	Typography,
+	styled,
+	ToggleButton,
+	ToggleButtonGroup,
+} from '@mui/material';
 import StatisticsCard from './StatisticsCard';
 import { useCallback, useState } from 'react';
-import SwitchButton from './SwitchButton';
 import LineBarChart from './LineBarChart';
-import TransactionTable from './TransactionTable';
 
 const StatisticsWrapper = styled(Box)(({ theme }) => ({
 	display: 'grid',
@@ -11,31 +16,12 @@ const StatisticsWrapper = styled(Box)(({ theme }) => ({
 	gap: theme.spacing(1),
 }));
 
-const DateSelect = styled(Select)(({ theme }) => ({
-	height: '40px',
-	borderRadius: theme.spacing(1),
-	borderColor: '1px solid #0000001A',
-	fontSize: '14px',
-	'&:hover .MuiOutlinedInput-notchedOutline': {
-		borderColor: '#0000001A',
-	},
-	'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-		border: '1px solid #0000001A',
-	},
-}));
-
-const dates = ['ALL', 'Day', 'Week', 'Month'];
+const dates = ['24H', '7D', '30D', 'ALL'];
 
 const Portfolio = () => {
-	const [switchValue, setSwitchValue] = useState('domain');
+	const [times, setTimes] = useState('ALL');
 
-	const [times, setTimes] = useState('Day');
-
-	const handleSwitch = useCallback((value) => {
-		setSwitchValue(value);
-	}, []);
-
-	const handleChangeDate = useCallback((event) => {
+	const handleChangeDate = useCallback((event, nextView) => {
 		setTimes(event.target.value);
 	}, []);
 
@@ -43,7 +29,6 @@ const Portfolio = () => {
 		<>
 			<StatisticsWrapper mt={2}>
 				<StatisticsCard type="domain" />
-				<StatisticsCard type="subdomain" />
 			</StatisticsWrapper>
 
 			<Stack
@@ -52,24 +37,30 @@ const Portfolio = () => {
 				alignItems="center"
 				mt={3}
 			>
-				<SwitchButton value={switchValue} onChange={handleSwitch} />
-
-				<DateSelect
-					labelId="demo-select-small"
-					id="demo-select-small"
+				<Typography
+					sx={(theme) => ({
+						fontSize: '16px',
+						color: theme.color.text,
+					})}
+				>
+					Domain Registration Overview
+				</Typography>
+				<ToggleButtonGroup
+					sx={{
+						height: '37px',
+					}}
 					value={times}
 					onChange={handleChangeDate}
 				>
 					{dates.map((item) => (
-						<MenuItem key={item} value={item} sx={{ fontSize: '14px' }}>
+						<ToggleButton value={item} key={item}>
 							{item}
-						</MenuItem>
+						</ToggleButton>
 					))}
-				</DateSelect>
+				</ToggleButtonGroup>
 			</Stack>
 
 			<LineBarChart />
-			<TransactionTable />
 		</>
 	);
 };

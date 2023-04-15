@@ -11,6 +11,10 @@ import { ReactComponent as DelIcon } from './icons/profile/del.svg';
 import { ReactComponent as EditIcon } from './icons/profile/edit.svg';
 import { ReactComponent as SetPrimaryNameIcon } from './icons/profile/setPrimaryName.svg';
 import { ReactComponent as SellIcon } from './icons/profile/sell.svg';
+import { ReactComponent as M } from './icons/profile/m.svg';
+import { ReactComponent as Twi } from './icons/profile/twi.svg';
+import { ReactComponent as Disc } from './icons/profile/disc.svg';
+import { ReactComponent as Tel } from './icons/profile/tel.svg';
 
 // common
 import { ReactComponent as MentionIcon } from './icons/common/mention.svg';
@@ -35,4 +39,8 @@ export {
 	Discord,
 	Twitter,
 	EmojLaught,
+	M,
+	Twi,
+	Disc,
+	Tel,
 };
