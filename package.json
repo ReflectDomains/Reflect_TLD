@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "craco": "^0.0.3",
     "craco-less": "^2.0.0",
+    "cross-env": "^7.0.3",
     "echarts": "^5.4.2",
     "echarts-for-react": "^3.0.2",
     "eth-rpc-errors": "^4.0.3",
@@ -33,7 +34,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "cross-env GENERATE_SOURCEMAP=false craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

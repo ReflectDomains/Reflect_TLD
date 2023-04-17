@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Stack, Typography, styled } from '@mui/material';
+import { Box, Paper, Typography, styled } from '@mui/material';
 import { memo } from 'react';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
@@ -7,10 +7,6 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 	height: 118,
 	boxShadow:
 		'0px 14px 28px -80px rgba(23, 12, 86, 0.02), 8px 0px 33px rgba(30, 21, 81, 0.05)',
-}));
-
-const Title = styled(Typography)(() => ({
-	fontWeight: 600,
 }));
 
 const Price = styled(Typography)(({ theme }) => ({

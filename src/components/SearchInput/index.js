@@ -23,7 +23,7 @@ const Search = styled(Input)(({ inputsx }) => ({
 	height: '44px',
 	border: 'none',
 	background: '#fff',
-	borderRadius: '20px',
+	borderRadius: '10px',
 	':hover,': {
 		border: 'none',
 	},
