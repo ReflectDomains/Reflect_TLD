@@ -56,5 +56,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
-          target: '/www/wwwroot/ltd.reflect.ltd/'
+          target: '/www/wwwroot/tld.reflect.ltd/'
           overwrite: true
