@@ -1,5 +1,5 @@
 {
-  "name": "reflect_subdomain",
+  "name": "reflect_tld",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
