@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+
 export const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 export const splitAddress = (address, start = 5, end = -4) => {
@@ -5,6 +7,9 @@ export const splitAddress = (address, start = 5, end = -4) => {
 		(address && address.slice(0, start) + '...' + address.slice(end)) || ''
 	);
 };
+
+export const keccak256tld = (tld) =>
+	ethers.utils.keccak256(ethers.utils.solidityPack(['bytes32'], [tld]));
 
 export const throttle = (fn, delay) => {
 	let throttleTimer = null;
