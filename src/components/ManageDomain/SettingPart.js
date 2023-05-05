@@ -184,6 +184,7 @@ const SettingPart = ({ settingType = 1 }) => {
 							control={
 								<Checkbox
 									name={value}
+									disabled={value !== 'USDT'}
 									checked={checkList[value]}
 									onChange={handleChangeToken}
 								/>
