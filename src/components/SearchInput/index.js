@@ -8,6 +8,7 @@ import {
 	Typography,
 	styled,
 	Fade,
+	debounce,
 } from '@mui/material';
 import { memo, useCallback, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -99,6 +100,7 @@ const SearchInput = ({
 	inputsx = {},
 	placeholder = '',
 	width = '600',
+	onInput,
 }) => {
 	const boxRef = useRef(null);
 	const [searchValue, setSearchValue] = useState('');
@@ -114,10 +116,17 @@ const SearchInput = ({
 		setFocus(status);
 	};
 
-	const handleChange = useCallback((e) => {
-		const value = e.target.value;
-		setSearchValue(value);
-	}, []);
+	// eslint-disable-next-line
+	const debounceInputChange = useCallback(debounce(onInput, 500), []);
+
+	const handleChange = useCallback(
+		(e) => {
+			const value = e.target.value;
+			setSearchValue(value);
+			debounceInputChange(value);
+		},
+		[debounceInputChange]
+	);
 
 	const clearSearchValue = useCallback(() => {
 		setSearchValue('');

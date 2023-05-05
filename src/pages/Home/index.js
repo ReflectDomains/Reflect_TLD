@@ -29,6 +29,9 @@ const Home = () => {
 		},
 		[navigate]
 	);
+	const inputSearchValue = useCallback((v) => {
+		console.log(v, 'vv');
+	}, []);
 	return (
 		<>
 			<Title>
@@ -40,6 +43,7 @@ const Home = () => {
 					width={600}
 					onChange={chooseDomain}
 					placeholder="Search for top-level domain / domain name"
+					onInput={inputSearchValue}
 				/>
 			</Stack>
 
