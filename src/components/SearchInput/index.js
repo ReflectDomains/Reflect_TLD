@@ -9,11 +9,13 @@ import {
 	styled,
 	Fade,
 	debounce,
+	CircularProgress
 } from '@mui/material';
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { handleTldName } from '../../utils';
 
 const SearchWrapper = styled(Box)(({ width }) => ({
 	width: width,
@@ -78,21 +80,21 @@ const RegisterStatus = styled(Box)(({ theme, ...props }) => ({
 	fontWeight: 700,
 }));
 
-const list = [
-	{
-		name: '.city',
-		status: 'Registered',
-	},
-	{
-		name: '.bit',
-		status: 'Available',
-	},
+// const list = [
+// 	{
+// 		name: '.city',
+// 		status: 'Registered',
+// 	},
+// 	{
+// 		name: '.bit',
+// 		status: 'Available',
+// 	},
 
-	{
-		name: '.uni',
-		status: 'Unsupported',
-	},
-];
+// 	{
+// 		name: '.uni',
+// 		status: 'Unsupported',
+// 	},
+// ];
 
 const SearchInput = ({
 	onChange,
@@ -104,16 +106,15 @@ const SearchInput = ({
 }) => {
 	const boxRef = useRef(null);
 	const [searchValue, setSearchValue] = useState('');
-	const [isFocus, setFocus] = useState(false);
+	const [isOpen, setOpen] = useState(false);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 
-	const canBeOpen = isFocus && Boolean(anchorEl);
+	const canBeOpen = isOpen && Boolean(anchorEl);
 	const id = canBeOpen ? 'spring-popper' : undefined;
 
 	const handleClick = (status) => {
 		setAnchorEl(boxRef?.current);
-		setFocus(status);
 	};
 
 	// eslint-disable-next-line
@@ -123,10 +124,14 @@ const SearchInput = ({
 		(e) => {
 			const value = e.target.value;
 			setSearchValue(value);
+			if (!isOpen) setOpen(true);
+			if (!value && isOpen) setOpen(false);
 			debounceInputChange(value);
 		},
-		[debounceInputChange]
+		[debounceInputChange, isOpen]
 	);
+
+	const list = useMemo(() => searchValue ? [{name: searchValue, status: 'loading'}]: [], [searchValue])
 
 	const clearSearchValue = useCallback(() => {
 		setSearchValue('');
@@ -167,7 +172,7 @@ const SearchInput = ({
 			/>
 			<Popper
 				id={id}
-				open={isFocus}
+				open={isOpen}
 				anchorEl={anchorEl}
 				transition
 				placement="bottom-start"
@@ -176,24 +181,31 @@ const SearchInput = ({
 				{({ TransitionProps }) => (
 					<Fade {...TransitionProps} timeout={350}>
 						<PopoverList width={width}>
-							{list.map((item) => (
+							{list.length > 0 && list.map((item) => (
 								<PopoverListItem
 									key={item.name}
 									onClick={chooseDomain.bind(this, item)}
 								>
-									<ListItemTitle>{item.name}</ListItemTitle>
+									<ListItemTitle>{handleTldName(item.name)}</ListItemTitle>
 									<Stack
 										direction="row"
 										alignItems="center"
 										justifyContent="center"
 										spacing={1}
 									>
-										<RegisterStatus status={item.status}>
-											{item.status}
-										</RegisterStatus>
-										<ChevronRightIcon
-											sx={(theme) => ({ color: theme.color.mentionColor })}
-										/>
+										{
+											item.status === 'loading' ? <CircularProgress size={14} thickness={7} /> : (
+												<>
+													<RegisterStatus status={item.status}>
+														{item.status}
+													</RegisterStatus>
+													<ChevronRightIcon
+														sx={(theme) => ({ color: theme.color.mentionColor })}
+													/>
+												</>
+											)
+										}
+										
 									</Stack>
 								</PopoverListItem>
 							))}

@@ -11,6 +11,14 @@ export const splitAddress = (address, start = 5, end = -4) => {
 export const keccak256tld = (tld) =>
 	ethers.utils.keccak256(ethers.utils.solidityPack(['bytes32'], [tld]));
 
+export const handleTldName = (name) => {
+	if (name.match(/^\./)) {
+		return name;
+	} else {
+		return '.' + name;
+	}
+}
+
 export const throttle = (fn, delay) => {
 	let throttleTimer = null;
 	return function () {
