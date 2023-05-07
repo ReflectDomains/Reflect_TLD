@@ -13,6 +13,7 @@ import {
 	Typography,
 	TableContainer,
 	TableBody,
+	Link,
 } from '@mui/material';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -47,7 +48,13 @@ const Cell = styled(TableCell)(({ theme }) => ({
 
 const Label = styled(Typography)(() => ({}));
 
-const SettingPart = ({ settingType = 1 }) => {
+const SettingPart = ({
+	settingType = 1,
+	domainValue = [],
+	onChange,
+	onChangeImpermanent,
+	changeReceivingAddress,
+}) => {
 	const { address } = useAccount();
 	const splitAddress = useMemo(
 		() => (address ? `${address.slice(0, 6)}...${address.slice(-6)}` : ''),
@@ -60,12 +67,34 @@ const SettingPart = ({ settingType = 1 }) => {
 	const [increaseValueOne, setIncreaseValueOne] = useState('');
 	const [increaseValueTwo, setIncreaseValueTwo] = useState('');
 
+	const [updateAddrDisabled, setUpdateAddrDisabled] = useState(true);
+	const [receivingAddress, setReceivingAddress] = useState(null);
+
+	const changeReceivingAddressInput = useCallback(
+		(e) => {
+			setReceivingAddress(e.target.value);
+			changeReceivingAddress && changeReceivingAddress(e.target.value);
+		},
+		[changeReceivingAddress]
+	);
+
 	// control digit
 	const [digitChecked, setDightChecked] = useState(true);
 	// control impermanent
 	const [impermanentChecked, setImpermanentChecked] = useState(false);
 	// control Increase model
 	const [increaseChecked, setIncreaseChecked] = useState(false);
+
+	const calCheckToken = useMemo(() => {
+		const arr = Object.keys(checkList);
+		const checkedTokenSymbol = [];
+		arr.forEach((item) => {
+			if (checkList[item]) {
+				checkedTokenSymbol.push(item);
+			}
+		});
+		return checkedTokenSymbol;
+	}, [checkList]);
 
 	const calCheckedCount = useMemo(() => {
 		const arr = Object.values(checkList);
@@ -104,17 +133,34 @@ const SettingPart = ({ settingType = 1 }) => {
 		[checkList]
 	);
 
-	const handleChangeDigit = (event) => {
-		setDightChecked(event.target.checked);
-		// setCheckList({ ...tokenSetDefault });
-		setTokenPriceList(new Map());
-	};
+	const initPrices = useCallback(
+		(checked) => {
+			return calCheckToken.map((item) => [
+				item,
+				checked ? [...digitsDifferentLengthToDefaultPrice] : [digitDefault],
+			]);
+		},
+		[calCheckToken]
+	);
 
-	const handleChangeImpermant = (event) => {
-		setImpermanentChecked(event.target.checked);
-		// setCheckList({ ...tokenSetDefault });
-		setTokenPriceList(new Map());
-	};
+	const handleChangeDigit = useCallback(
+		(event) => {
+			const checked = event.target.checked;
+			setDightChecked(checked);
+			setTokenPriceList(new Map());
+			const initP = initPrices(checked);
+			onChange && onChange(new Map([...initP]));
+		},
+		[onChange, initPrices]
+	);
+
+	const handleChangeImpermant = useCallback(
+		(event) => {
+			setImpermanentChecked(event.target.checked);
+			onChangeImpermanent && onChangeImpermanent(event.target.checked);
+		},
+		[onChangeImpermanent]
+	);
 
 	const handleChangeIncrease = (event) => {
 		setIncreaseChecked(event.target.checked);
@@ -133,17 +179,23 @@ const SettingPart = ({ settingType = 1 }) => {
 		(v, token, pricePlace) => {
 			saveTimeId && clearTimeout(saveTimeId);
 			const id = setTimeout(() => {
+				// set a new map
+				const _tokenPriceList = new Map([...tokenPriceList]);
+
 				const oldTokenPrice = tokenPriceList.has(token)
 					? [...tokenPriceList.get(token)]
 					: [...digitsDifferentLengthToDefaultPrice];
 				const newPrice = v.target.value;
 				oldTokenPrice.splice(pricePlace, 1, newPrice);
 				setTokenPriceList((v) => v.set(token, oldTokenPrice));
+
+				_tokenPriceList.set(token, oldTokenPrice);
+				onChange && onChange(_tokenPriceList);
 			}, 300);
 			setSaveTimeId(id);
 			return () => saveTimeId && clearTimeout(saveTimeId);
 		},
-		[tokenPriceList, saveTimeId]
+		[tokenPriceList, saveTimeId, onChange]
 	);
 
 	const tokenPriceValue = useCallback(
@@ -197,7 +249,29 @@ const SettingPart = ({ settingType = 1 }) => {
 			{/* Receiving adress */}
 			<Stack direction="row" alignItems="center" spacing={1}>
 				<Label>Receiving address:</Label>
-				<Label>{splitAddress}</Label>
+				{updateAddrDisabled ? (
+					<Label>{splitAddress}</Label>
+				) : (
+					<Input
+						value={receivingAddress || address}
+						onChange={changeReceivingAddressInput}
+						disableUnderline={true}
+					/>
+				)}
+
+				<Link
+					underline="none"
+					onClick={() => {
+						setUpdateAddrDisabled(!updateAddrDisabled);
+					}}
+					sx={(theme) => ({
+						color: updateAddrDisabled ? theme.color.main : theme.color.success,
+						fontWeight: 800,
+						cursor: 'pointer',
+					})}
+				>
+					{updateAddrDisabled ? 'Update Addr' : 'done'}
+				</Link>
 			</Stack>
 			{/* Pricing */}
 			<Stack direction="row" alignItems="center" spacing={1}>
@@ -212,7 +286,11 @@ const SettingPart = ({ settingType = 1 }) => {
 						/>
 						<ErrorOutlineIcon sx={{ color: '#666' }} />
 						<Label>Increase model</Label>
-						<Switch checked={increaseChecked} onChange={handleChangeIncrease} />
+						<Switch
+							disabled
+							checked={increaseChecked}
+							onChange={handleChangeIncrease}
+						/>
 						<ErrorOutlineIcon sx={{ color: '#666' }} />
 					</>
 				) : null}
@@ -244,7 +322,7 @@ const SettingPart = ({ settingType = 1 }) => {
 											{value}
 											{impermanentChecked ? '/year' : ''}
 										</Cell>
-										{digitsDifferentLengthToDefaultPrice.map((price, index) => (
+										{domainValue.map((price, index) => (
 											<Cell component="th" scope="row" key={index}>
 												<input
 													defaultValue={price}

@@ -1,15 +1,21 @@
 import { Stack, Box } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { LoadingButton } from '@mui/lab';
 
 import { TypographyInfo } from '../../pages/Launch';
 import SettingPart from './SettingPart';
 
-const ManageDomain = ({ isSuccess = false }) => {
+const ManageDomain = (props) => {
+	const { isSuccess, onConfirm, isLoading } = props;
+
+	const confirmSetting = useCallback(() => {
+		onConfirm && onConfirm();
+	}, [onConfirm]);
+
 	return (
 		<>
-			<SettingPart />
+			<SettingPart {...props} />
 			{isSuccess ? (
 				<Stack
 					direction="row"
@@ -35,7 +41,12 @@ const ManageDomain = ({ isSuccess = false }) => {
 				</Stack>
 			) : (
 				<Box sx={{ mt: 3 }}>
-					<LoadingButton sx={{ width: '85px' }} variant="contained">
+					<LoadingButton
+						onClick={confirmSetting}
+						sx={{ width: '85px' }}
+						variant="contained"
+						loading={isLoading}
+					>
 						Confirm
 					</LoadingButton>
 				</Box>

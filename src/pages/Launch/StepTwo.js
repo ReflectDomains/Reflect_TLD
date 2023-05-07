@@ -3,17 +3,17 @@ import { memo } from 'react';
 
 const Label = styled(Typography)(() => ({}));
 
-const StepTwo = () => {
+const StepTwo = ({ value = '' }) => {
 	return (
 		<Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 2 }}>
 			<Label>DNS Subdomain Allocation:</Label>
 			<Input
 				sx={{ minWidth: 90, width: 90 }}
-				value={''}
+				value={value}
 				disableUnderline={true}
-				// onChange={(e) => changeIncreaseValue.bind(this, e, 1)}
+				readOnly
 			/>
-			<Label>.reflect.io</Label>
+			<Label>.reflectdomains.io</Label>
 		</Stack>
 	);
 };

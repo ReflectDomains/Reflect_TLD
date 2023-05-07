@@ -24,6 +24,9 @@ export const TypographyInfo = styled(Typography)(({ theme, sx }) => ({
 
 const Launch = () => {
 	const params = useParams();
+
+	const [disabled, setDisabled] = useState(true);
+
 	const [step, setStep] = useState(1);
 
 	const nextPage = useCallback(() => {
@@ -67,7 +70,11 @@ const Launch = () => {
 							padding: '20px',
 						}}
 					>
-						{step === 1 ? <StepOne /> : step === 2 ? <StepTwo /> : null}
+						{step === 1 ? (
+							<StepOne onDisabledChange={setDisabled} />
+						) : step === 2 ? (
+							<StepTwo value={params?.name} />
+						) : null}
 					</Box>
 				) : null}
 				{step <= 2 ? (
@@ -87,7 +94,11 @@ const Launch = () => {
 								Back
 							</LoadingButton>
 						) : null}
-						<LoadingButton variant="contained" onClick={nextPage}>
+						<LoadingButton
+							disabled={disabled}
+							variant="contained"
+							onClick={nextPage}
+						>
 							Next
 						</LoadingButton>
 					</Stack>

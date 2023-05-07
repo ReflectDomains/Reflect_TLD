@@ -11,7 +11,7 @@ import {
 	debounce,
 	CircularProgress,
 } from '@mui/material';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -122,7 +122,12 @@ const SearchInput = ({
 
 	const chooseDomain = useCallback(
 		(status) => {
-			onChange && onChange(status);
+			let _obj = { ...status };
+			if (status?.name.match(/^\./)) {
+				const tld = status?.name.split('.')[1];
+				_obj.name = tld;
+			}
+			onChange && onChange(_obj);
 		},
 		[onChange]
 	);

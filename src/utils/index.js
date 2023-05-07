@@ -8,10 +8,22 @@ export const splitAddress = (address, start = 5, end = -4) => {
 	);
 };
 
+export const getNameHash = (name) =>
+	(name && ethers.utils.namehash(name)) || '';
+
 export const keccak256tld = (tld) =>
 	ethers.utils.keccak256(ethers.utils.toUtf8Bytes(tld));
 
+export const keccakCondition = (arg) =>
+	ethers.utils.solidityKeccak256(['bool', 'uint256', 'address'], [...arg]);
+
+export const formatUnitsWithDec = (n, d) => {
+	if (!n) return '';
+	return ethers.utils.formatUnits(n?.toString(), d ?? 0)?.toString();
+};
+
 export const handleTldName = (name) => {
+	if (!name) return '';
 	if (name.match(/^\./)) {
 		return name;
 	} else {

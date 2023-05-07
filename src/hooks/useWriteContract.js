@@ -6,7 +6,7 @@ import {
 	usePrepareContractWrite,
 	useWaitForTransaction,
 } from 'wagmi';
-import { reflectContract } from '../config/contract';
+import { tldContract } from '../config/contract';
 
 const useWriteContract = ({
 	functionName,
@@ -36,7 +36,7 @@ const useWriteContract = ({
 		isSuccess: prepareSuccess,
 		refetch,
 	} = usePrepareContractWrite({
-		address: contractAddress || reflectContract,
+		address: contractAddress || tldContract,
 		abi: ABIJSON || tldABI,
 		functionName: functionName,
 		args: [...args],
@@ -69,7 +69,6 @@ const useWriteContract = ({
 			errorFn();
 		},
 		onSettled() {
-			console.log('test');
 			settledFn();
 		},
 	});

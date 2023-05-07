@@ -2,9 +2,9 @@ import { Stack, Typography, styled } from '@mui/material';
 import PopularDomainCard from './PopularDomainCard';
 import avatar from '../../assets/images/avatar.png';
 import SearchInput from '../../components/SearchInput';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { keccak256tld, zeroAddress } from '../../utils';
+import { getNameHash, zeroAddress } from '../../utils';
 import { useContractRead } from 'wagmi';
 import { tldContract } from '../../config/contract';
 import { tldABI } from '../../config/ABI';
@@ -35,7 +35,6 @@ const Home = () => {
 		abi: tldABI,
 		enabled: !!tld,
 	});
-	console.log(data, 'dd');
 
 	const chooseDomain = useCallback(
 		(item) => {
@@ -46,13 +45,16 @@ const Home = () => {
 		[navigate]
 	);
 	const inputSearchValue = useCallback((v) => {
-		const tldKecak = keccak256tld(v);
+		setTldName(v);
+		const tldKecak = getNameHash(v);
 		setTld(tldKecak);
 	}, []);
 
 	const list = useMemo(() => {
 		const status = isLoading
 			? 'loading'
+			: !data
+			? ''
 			: data.owner === zeroAddress
 			? 'Available'
 			: 'Registered';
