@@ -2,8 +2,12 @@ import { Stack, Typography, styled } from '@mui/material';
 import PopularDomainCard from './PopularDomainCard';
 import avatar from '../../assets/images/avatar.png';
 import SearchInput from '../../components/SearchInput';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { keccak256tld, zeroAddress } from '../../utils';
+import { useContractRead } from 'wagmi';
+import { tldContract } from '../../config/contract';
+import { tldABI } from '../../config/ABI';
 
 const Title = styled(Typography)(() => ({
 	fontSize: '36px',
@@ -21,6 +25,18 @@ const PopularDomainsText = styled(Typography)(({ theme }) => ({
 
 const Home = () => {
 	const navigate = useNavigate();
+	const [tld, setTld] = useState('');
+	const [tldName, setTldName] = useState('');
+
+	const { data, isLoading } = useContractRead({
+		functionName: 'getTldToOwner',
+		args: [tld],
+		address: tldContract,
+		abi: tldABI,
+		enabled: !!tld,
+	});
+	console.log(data, 'dd');
+
 	const chooseDomain = useCallback(
 		(item) => {
 			if (item.status === 'Available') {
@@ -30,8 +46,19 @@ const Home = () => {
 		[navigate]
 	);
 	const inputSearchValue = useCallback((v) => {
-		console.log(v, 'vv');
+		const tldKecak = keccak256tld(v);
+		setTld(tldKecak);
 	}, []);
+
+	const list = useMemo(() => {
+		const status = isLoading
+			? 'loading'
+			: data.owner === zeroAddress
+			? 'Available'
+			: 'Registered';
+		return [{ name: tldName, status }];
+	}, [data, tldName, isLoading]);
+
 	return (
 		<>
 			<Title>
@@ -44,6 +71,7 @@ const Home = () => {
 					onChange={chooseDomain}
 					placeholder="Search for top-level domain / domain name"
 					onInput={inputSearchValue}
+					list={list}
 				/>
 			</Stack>
 

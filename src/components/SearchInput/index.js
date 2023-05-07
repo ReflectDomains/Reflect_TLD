@@ -9,7 +9,7 @@ import {
 	styled,
 	Fade,
 	debounce,
-	CircularProgress
+	CircularProgress,
 } from '@mui/material';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -80,22 +80,6 @@ const RegisterStatus = styled(Box)(({ theme, ...props }) => ({
 	fontWeight: 700,
 }));
 
-// const list = [
-// 	{
-// 		name: '.city',
-// 		status: 'Registered',
-// 	},
-// 	{
-// 		name: '.bit',
-// 		status: 'Available',
-// 	},
-
-// 	{
-// 		name: '.uni',
-// 		status: 'Unsupported',
-// 	},
-// ];
-
 const SearchInput = ({
 	onChange,
 	sx = {},
@@ -103,6 +87,7 @@ const SearchInput = ({
 	placeholder = '',
 	width = '600',
 	onInput,
+	list = [],
 }) => {
 	const boxRef = useRef(null);
 	const [searchValue, setSearchValue] = useState('');
@@ -113,7 +98,7 @@ const SearchInput = ({
 	const canBeOpen = isOpen && Boolean(anchorEl);
 	const id = canBeOpen ? 'spring-popper' : undefined;
 
-	const handleClick = (status) => {
+	const handleClick = () => {
 		setAnchorEl(boxRef?.current);
 	};
 
@@ -130,8 +115,6 @@ const SearchInput = ({
 		},
 		[debounceInputChange, isOpen]
 	);
-
-	const list = useMemo(() => searchValue ? [{name: searchValue, status: 'loading'}]: [], [searchValue])
 
 	const clearSearchValue = useCallback(() => {
 		setSearchValue('');
@@ -181,34 +164,36 @@ const SearchInput = ({
 				{({ TransitionProps }) => (
 					<Fade {...TransitionProps} timeout={350}>
 						<PopoverList width={width}>
-							{list.length > 0 && list.map((item) => (
-								<PopoverListItem
-									key={item.name}
-									onClick={chooseDomain.bind(this, item)}
-								>
-									<ListItemTitle>{handleTldName(item.name)}</ListItemTitle>
-									<Stack
-										direction="row"
-										alignItems="center"
-										justifyContent="center"
-										spacing={1}
+							{list.length > 0 &&
+								list.map((item) => (
+									<PopoverListItem
+										key={item.name}
+										onClick={chooseDomain.bind(this, item)}
 									>
-										{
-											item.status === 'loading' ? <CircularProgress size={14} thickness={7} /> : (
+										<ListItemTitle>{handleTldName(item.name)}</ListItemTitle>
+										<Stack
+											direction="row"
+											alignItems="center"
+											justifyContent="center"
+											spacing={1}
+										>
+											{item.status === 'loading' ? (
+												<CircularProgress size={14} thickness={7} />
+											) : (
 												<>
 													<RegisterStatus status={item.status}>
 														{item.status}
 													</RegisterStatus>
 													<ChevronRightIcon
-														sx={(theme) => ({ color: theme.color.mentionColor })}
+														sx={(theme) => ({
+															color: theme.color.mentionColor,
+														})}
 													/>
 												</>
-											)
-										}
-										
-									</Stack>
-								</PopoverListItem>
-							))}
+											)}
+										</Stack>
+									</PopoverListItem>
+								))}
 						</PopoverList>
 					</Fade>
 				)}

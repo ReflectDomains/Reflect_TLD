@@ -2,23 +2,8 @@
 	{
 		"inputs": [
 			{
-				"internalType": "contract BaseRegistrar",
-				"name": "_base",
-				"type": "address"
-			},
-			{
-				"internalType": "contract LaunchTld",
-				"name": "_launchTld",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_platformPercentage",
-				"type": "uint256"
-			},
-			{
 				"internalType": "address",
-				"name": "_platformWallet",
+				"name": "_registryController",
 				"type": "address"
 			}
 		],
@@ -30,85 +15,87 @@
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "bytes32",
-				"name": "name",
-				"type": "bytes32"
-			},
+				"internalType": "address",
+				"name": "baseRegistrar",
+				"type": "address"
+			}
+		],
+		"name": "SetBaseRegistrar",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
 			{
 				"indexed": true,
 				"internalType": "bytes32",
-				"name": "label",
+				"name": "tld",
 				"type": "bytes32"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "owner",
+				"name": "receivingAddress",
+				"type": "address"
+			}
+		],
+		"name": "SetReceivingAddress",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "registry",
+				"type": "address"
+			}
+		],
+		"name": "SetRegistry",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "tld",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "receivingAddress",
 				"type": "address"
 			},
 			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "cost",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "expires",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
+				"indexed": true,
 				"internalType": "bool",
 				"name": "permanent",
 				"type": "bool"
 			},
 			{
 				"indexed": false,
-				"internalType": "address",
+				"internalType": "bytes32[]",
+				"name": "condition",
+				"type": "bytes32[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256[]",
+				"name": "price",
+				"type": "uint256[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "address[]",
 				"name": "payment",
-				"type": "address"
+				"type": "address[]"
 			}
 		],
-		"name": "NameRegistered",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "name",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "label",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "cost",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "expires",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "payment",
-				"type": "address"
-			}
-		],
-		"name": "NameRenewed",
+		"name": "SetTld",
 		"type": "event"
 	},
 	{
@@ -117,95 +104,22 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "launchTld",
-				"type": "address"
-			}
-		],
-		"name": "NewLaunchTld",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
+				"name": "member",
 				"type": "address"
 			},
 			{
 				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
+				"internalType": "bool",
+				"name": "enabled",
+				"type": "bool"
 			}
 		],
-		"name": "OwnershipTransferred",
+		"name": "UpdateWhitelist",
 		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "tld",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "platformFee",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "payment",
-				"type": "address"
-			}
-		],
-		"name": "PlatformFee",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "tld",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "tldOwnerFee",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "payment",
-				"type": "address"
-			}
-		],
-		"name": "TldOwnerFee",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{ "internalType": "string", "name": "name", "type": "string" },
-			{ "internalType": "string", "name": "tld", "type": "string" }
-		],
-		"name": "available",
-		"outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-		"stateMutability": "view",
-		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "base",
+		"name": "baseRegistrar",
 		"outputs": [
 			{
 				"internalType": "contract BaseRegistrar",
@@ -217,131 +131,174 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "isOwner",
+		"inputs": [{ "internalType": "bytes32", "name": "tld", "type": "bytes32" }],
+		"name": "getSupportedPayment",
+		"outputs": [
+			{ "internalType": "address[]", "name": "", "type": "address[]" }
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "bytes32", "name": "tld", "type": "bytes32" }],
+		"name": "getTldToOwner",
+		"outputs": [
+			{
+				"components": [
+					{ "internalType": "address", "name": "owner", "type": "address" },
+					{
+						"internalType": "address",
+						"name": "receivingAddress",
+						"type": "address"
+					},
+					{ "internalType": "bool", "name": "permanent", "type": "bool" },
+					{
+						"internalType": "address[]",
+						"name": "supportedPayment",
+						"type": "address[]"
+					}
+				],
+				"internalType": "struct LaunchTldImplementation.TldOwner",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+		"name": "ownerToTld",
+		"outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "bytes32", "name": "tld", "type": "bytes32" }],
+		"name": "permanentOwnershipOfSubnode",
 		"outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "launchTld",
-		"outputs": [
-			{ "internalType": "contract LaunchTld", "name": "", "type": "address" }
+		"inputs": [
+			{ "internalType": "bytes32", "name": "", "type": "bytes32" },
+			{ "internalType": "bytes32", "name": "", "type": "bytes32" }
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "platformPercentage",
+		"name": "prices",
 		"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "platformWallet",
+		"inputs": [{ "internalType": "bytes32", "name": "tld", "type": "bytes32" }],
+		"name": "receivingAddress",
 		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{ "internalType": "string", "name": "name", "type": "string" },
-			{ "internalType": "string", "name": "tld", "type": "string" },
-			{ "internalType": "address", "name": "owner", "type": "address" },
-			{ "internalType": "uint256", "name": "duration", "type": "uint256" },
-			{ "internalType": "address", "name": "payment", "type": "address" }
+		"inputs": [],
+		"name": "reflectRegistry",
+		"outputs": [
+			{ "internalType": "contract Reflect", "name": "", "type": "address" }
 		],
-		"name": "register",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{ "internalType": "string", "name": "name", "type": "string" },
-			{ "internalType": "string", "name": "tld", "type": "string" },
-			{ "internalType": "address", "name": "owner", "type": "address" },
-			{ "internalType": "uint256", "name": "duration", "type": "uint256" },
-			{ "internalType": "address", "name": "payment", "type": "address" },
-			{ "internalType": "address", "name": "resolver", "type": "address" },
-			{ "internalType": "address", "name": "addr", "type": "address" }
-		],
-		"name": "registerWithConfig",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{ "internalType": "string", "name": "name", "type": "string" },
-			{ "internalType": "string", "name": "tld", "type": "string" },
-			{ "internalType": "uint256", "name": "duration", "type": "uint256" },
-			{ "internalType": "address", "name": "payment", "type": "address" }
-		],
-		"name": "renew",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{ "internalType": "string", "name": "name", "type": "string" },
-			{ "internalType": "bytes32", "name": "baseNode", "type": "bytes32" },
-			{ "internalType": "uint256", "name": "duration", "type": "uint256" },
-			{ "internalType": "address", "name": "payment", "type": "address" }
-		],
-		"name": "rentPrice",
-		"outputs": [
-			{ "internalType": "uint256", "name": "", "type": "uint256" },
-			{ "internalType": "bool", "name": "", "type": "bool" }
-		],
+		"name": "registryController",
+		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "contract LaunchTld",
-				"name": "_launchTld",
+				"internalType": "contract BaseRegistrar",
+				"name": "_baseRegistrar",
 				"type": "address"
 			}
 		],
-		"name": "setLaunchTld",
+		"name": "setBaseRegistrar",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
-			{ "internalType": "address", "name": "newOwner", "type": "address" }
+			{ "internalType": "address", "name": "receiveWallet", "type": "address" }
 		],
-		"name": "transferOwnership",
+		"name": "setReceiveAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
-		"name": "valid",
+		"inputs": [
+			{
+				"internalType": "contract Reflect",
+				"name": "_registry",
+				"type": "address"
+			}
+		],
+		"name": "setReflectRegistry",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{ "internalType": "string", "name": "tld", "type": "string" },
+			{ "internalType": "address", "name": "receiveWallet", "type": "address" },
+			{ "internalType": "bytes32[]", "name": "condition", "type": "bytes32[]" },
+			{ "internalType": "uint256[]", "name": "price", "type": "uint256[]" },
+			{ "internalType": "address[]", "name": "payment", "type": "address[]" },
+			{ "internalType": "bool", "name": "permanent", "type": "bool" }
+		],
+		"name": "setTld",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "bool", "name": "enabled", "type": "bool" }],
+		"name": "setWhitelistEnabled",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+		"name": "tldToOwner",
+		"outputs": [
+			{ "internalType": "address", "name": "owner", "type": "address" },
+			{
+				"internalType": "address",
+				"name": "receivingAddress",
+				"type": "address"
+			},
+			{ "internalType": "bool", "name": "permanent", "type": "bool" }
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{ "internalType": "address", "name": "member", "type": "address" },
+			{ "internalType": "bool", "name": "enabled", "type": "bool" }
+		],
+		"name": "updateWhitelist",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+		"name": "whitelist",
 		"outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-		"stateMutability": "pure",
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]
