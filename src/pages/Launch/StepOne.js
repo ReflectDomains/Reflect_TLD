@@ -54,8 +54,15 @@ const StepOne = ({ onDisabledChange }) => {
 
 	const [impermanent, setImpermanent] = useState(false);
 
-	// condition: [premanent, length, payment]
+	// is impermanent
+	const { data: isPermanemt } = useContractRead({
+		functionName: 'permanentOwnershipOfSubnode',
+		abi: tldABI,
+		address: tldContract,
+		args: [getNameHash(tldName)],
+	});
 
+	// condition: [premanent, length, payment]
 	const condition = useMemo(() => {
 		let arr = new Array(conditionLen).fill(0);
 		return arr.map((_, index) =>
@@ -83,10 +90,10 @@ const StepOne = ({ onDisabledChange }) => {
 	});
 
 	const domainValue = useMemo(() => {
-		if (!tokens || tokens.length <= 0) {
+		if (!tokens || tokens.length <= 0 || !prices) {
 			return !value ? [...digitsDifferentLengthToDefaultPrice] : value;
 		}
-		return prices.map((item) => formatUnitsWithDec(item, dec));
+		return prices && prices.map((item) => formatUnitsWithDec(item, dec));
 	}, [tokens, value, prices, dec]);
 
 	const decDomainValue = useMemo(() => {
@@ -138,6 +145,7 @@ const StepOne = ({ onDisabledChange }) => {
 				changeReceivingAddress={onChangeReceivingAddress}
 				onConfirm={confirmSetting}
 				isLoading={isLoading}
+				impermanent={!isPermanemt}
 			/>
 		</>
 	);

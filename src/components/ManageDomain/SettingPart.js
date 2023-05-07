@@ -54,6 +54,7 @@ const SettingPart = ({
 	onChange,
 	onChangeImpermanent,
 	changeReceivingAddress,
+	impermanent,
 }) => {
 	const { address } = useAccount();
 	const splitAddress = useMemo(
@@ -217,6 +218,10 @@ const SettingPart = ({
 			}
 		});
 	}, [checkList, digitChecked, tokenPriceValue]);
+
+	useEffect(() => {
+		setImpermanentChecked(impermanent);
+	}, [impermanent]);
 
 	return (
 		<>
