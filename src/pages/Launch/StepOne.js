@@ -129,7 +129,7 @@ const StepOne = ({ onDisabledChange }) => {
 	}, [write]);
 
 	useEffect(() => {
-		if (tokens.length > 0 || isSuccess) {
+		if ((tokens && tokens.length > 0) || isSuccess) {
 			setIsSettingOver(true);
 			onDisabledChange && onDisabledChange(false);
 		}
