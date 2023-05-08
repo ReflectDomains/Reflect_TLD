@@ -11,16 +11,14 @@ import { ReactComponent as DelIcon } from './icons/profile/del.svg';
 import { ReactComponent as EditIcon } from './icons/profile/edit.svg';
 import { ReactComponent as SetPrimaryNameIcon } from './icons/profile/setPrimaryName.svg';
 import { ReactComponent as SellIcon } from './icons/profile/sell.svg';
-import { ReactComponent as M } from './icons/profile/m.svg';
-import { ReactComponent as Twi } from './icons/profile/twi.svg';
-import { ReactComponent as Disc } from './icons/profile/disc.svg';
-import { ReactComponent as Tel } from './icons/profile/tel.svg';
 
 // common
 import { ReactComponent as MentionIcon } from './icons/common/mention.svg';
 import { ReactComponent as HelpIcon } from './icons/common/help.svg';
-import { ReactComponent as Discord } from './icons/common/discord.svg';
-import { ReactComponent as Twitter } from './icons/common/twitter.svg';
+import { ReactComponent as DiscordIcon } from './icons/common/discord.svg';
+import { ReactComponent as TwitterIcon } from './icons/common/twitter.svg';
+import { ReactComponent as MediumIcon } from './icons/common/medium.svg';
+import { ReactComponent as TGIcon } from './icons/common/tg.svg';
 
 // register
 import { ReactComponent as EmojLaught } from './icons/register/emo_laught.svg';
@@ -36,11 +34,9 @@ export {
 	BackgroundImage,
 	MentionIcon,
 	HelpIcon,
-	Discord,
-	Twitter,
 	EmojLaught,
-	M,
-	Twi,
-	Disc,
-	Tel,
+	DiscordIcon,
+	TwitterIcon,
+	MediumIcon,
+	TGIcon,
 };

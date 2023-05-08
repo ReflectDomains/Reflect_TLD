@@ -22,7 +22,7 @@ const Setting = () => {
 	const { handleSubmit, control, reset } = useForm({
 		defaultValues: initialProfile,
 	});
-	const [avatar, setAvatar] = useState();
+	const [avatar, setAvatar] = useState(initialProfile.avatar);
 	const [saveLoading, setSaveLoading] = useState(false);
 
 	const handleSetProfile = async (data) => {
