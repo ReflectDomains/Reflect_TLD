@@ -1,5 +1,7 @@
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
+import { formateNumber } from '../../../utils';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
 	borderRadius: '',
@@ -29,16 +31,20 @@ const DataWrapper = styled(Box)(({ theme }) => ({
 	gap: theme.spacing(1),
 }));
 
-const StatisticsCard = ({ type }) => {
+const StatisticsCard = () => {
+	const { profileInfo } = useSelector((state) => ({
+		profileInfo: state.reflect_loginInfo,
+	}));
+
 	return (
 		<Wrapper>
 			<DataWrapper spacing={1}>
 				<Box>
-					<Price>$836.54 USD</Price>
+					<Price>{`$${formateNumber(profileInfo.usd_revenue, 2)} USD`}</Price>
 					<Des>Total registration fee revenue</Des>
 				</Box>
 				<Box>
-					<Price>156</Price>
+					<Price>{profileInfo.total_registration}</Price>
 					<Des>Total domain registrations</Des>
 				</Box>
 			</DataWrapper>

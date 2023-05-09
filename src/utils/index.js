@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import BigNumber from 'bignumber.js';
 
 export const zeroAddress = '0x0000000000000000000000000000000000000000';
 
@@ -51,4 +52,10 @@ export const debounce = (fn, delay) => {
 			debounceTimer = null;
 		}, delay);
 	};
+};
+
+export const formateNumber = (value, n) => {
+	const number = new BigNumber(value);
+	const roundedNumber = number.decimalPlaces(n, BigNumber.ROUND_HALF_UP);
+	return roundedNumber.toFixed(n);
 };

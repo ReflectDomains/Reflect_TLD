@@ -51,8 +51,8 @@ const Profile = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { address } = useAccount();
-	// portfolio | subNames | domains
-	const [tabValue, setTabValue] = useState('tlds');
+	// portfolio | tlds
+	const [tabValue, setTabValue] = useState('portfolio');
 	const { profileInfo } = useSelector((state) => ({
 		profileInfo: state.reflect_loginInfo,
 	}));
