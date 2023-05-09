@@ -1,14 +1,30 @@
 import { Stack } from '@mui/material';
 import SearchInput from '../../../components/SearchInput';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import CollapseItem from './CollapseItem';
-const domainSetting = ['.city', '.bit', '.uni'];
+import { useSelector } from 'react-redux';
 
 const LTDS = () => {
 	const [selected, setSelected] = useState('');
+	const { tld } = useSelector((state) => ({
+		tld: state.reflect_loginInfo.tld,
+	}));
 	const onChangeSelect = useCallback((item) => {
 		setSelected(item);
 	}, []);
+
+	const tldNameWithPointer = useMemo(
+		() =>
+			(tld && [
+				{
+					show: `.${tld}`,
+					tld,
+				},
+			]) ||
+			[],
+		[tld]
+	);
+
 	return (
 		<Stack direction="column">
 			<Stack direction="row" justifyContent="flex-end">
@@ -22,12 +38,13 @@ const LTDS = () => {
 					sx={{ mt: 2 }}
 				/>
 			</Stack>
-			{domainSetting.map((item) => (
+			{tldNameWithPointer.map((item) => (
 				<CollapseItem
-					key={item}
-					item={item}
-					selected={selected === item}
-					onClick={onChangeSelect}
+					key={item.tld}
+					item={item.show}
+					tld={item.tld}
+					selected={selected === item.tld}
+					onClick={onChangeSelect.bind(this, item.tld)}
 				/>
 			))}
 		</Stack>

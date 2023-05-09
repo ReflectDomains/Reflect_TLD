@@ -7,6 +7,8 @@ const initialLoginState = {
 	discord: '',
 	twitter: '',
 	slogan: '',
+	tld: '',
+	tld_namehash: '',
 };
 
 const LoginReducer = (state = initialLoginState, action) => {

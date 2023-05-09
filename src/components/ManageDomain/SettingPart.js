@@ -220,7 +220,7 @@ const SettingPart = ({
 	}, [checkList, digitChecked, tokenPriceValue]);
 
 	useEffect(() => {
-		setImpermanentChecked(impermanent);
+		impermanent !== undefined && setImpermanentChecked(impermanent);
 	}, [impermanent]);
 
 	return (

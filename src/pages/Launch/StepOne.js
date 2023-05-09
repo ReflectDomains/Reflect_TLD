@@ -1,17 +1,12 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import ManageDomain from '../../components/ManageDomain';
-import { useAccount, useContractRead, useContractReads, useToken } from 'wagmi';
-import { tldABI } from '../../config/ABI';
-import { tldContract } from '../../config/contract';
-import { formatUnitsWithDec, getNameHash, keccakCondition } from '../../utils';
+import { useAccount, useToken } from 'wagmi';
 import { useParams } from 'react-router-dom';
-import {
-	digitsDifferentLengthToDefaultPrice,
-	tokenForContract,
-} from '../../config/profilePageSetting';
-import { digitsLength } from '../../config/profilePageSetting';
+import { tokenForContract } from '../../config/profilePageSetting';
 import useWriteContract from '../../hooks/useWriteContract';
-import { ethers } from 'ethers';
+import useDomainPrice from '../../hooks/useDomainPrice';
+import useDomainValue from '../../hooks/useDomainValue';
+import useGetTokens from '../../hooks/useGetTokens';
 
 const StepOne = ({ onDisabledChange }) => {
 	const { address } = useAccount();
@@ -22,12 +17,8 @@ const StepOne = ({ onDisabledChange }) => {
 
 	const tldName = useMemo(() => params?.name, [params]);
 
-	const { data: tokens } = useContractRead({
-		abi: tldABI,
-		address: tldContract,
-		functionName: 'getSupportedPayment',
-		enabled: !!tldName,
-		args: [getNameHash(tldName)],
+	const tokens = useGetTokens({
+		tldName,
 	});
 
 	const [receiving, setReceiving] = useState(null);
@@ -47,60 +38,19 @@ const StepOne = ({ onDisabledChange }) => {
 		setValue(d.get('USDT'));
 	}, []);
 
-	const conditionLen = useMemo(
-		() => digitsDifferentLengthToDefaultPrice.length,
-		[]
-	);
-
 	const [impermanent, setImpermanent] = useState(false);
 
-	// is impermanent
-	const { data: isPermanemt } = useContractRead({
-		functionName: 'permanentOwnershipOfSubnode',
-		abi: tldABI,
-		address: tldContract,
-		args: [getNameHash(tldName)],
+	const { isPermanemt, prices, condition } = useDomainPrice({
+		impermanent,
+		tldName,
 	});
 
-	// condition: [premanent, length, payment]
-	const condition = useMemo(() => {
-		let arr = new Array(conditionLen).fill(0);
-		return arr.map((_, index) =>
-			keccakCondition([
-				!impermanent,
-				digitsLength[index] === '4+' ? 5 : parseInt(digitsLength[index]),
-				tokenForContract['USDT'],
-			])
-		);
-	}, [conditionLen, impermanent]);
-
-	// get price
-	const getPricesArgs = useMemo(() => {
-		return condition.map((item) => {
-			return {
-				functionName: 'prices',
-				abi: tldABI,
-				address: tldContract,
-				args: [getNameHash(tldName), item],
-			};
-		});
-	}, [condition, tldName]);
-	const { data: prices } = useContractReads({
-		contracts: [...getPricesArgs],
+	const { domainValue, decDomainValue } = useDomainValue({
+		tokens,
+		prices,
+		dec,
+		value,
 	});
-
-	const domainValue = useMemo(() => {
-		if (!tokens || tokens.length <= 0 || !prices) {
-			return !value ? [...digitsDifferentLengthToDefaultPrice] : value;
-		}
-		return prices && prices.map((item) => formatUnitsWithDec(item, dec));
-	}, [tokens, value, prices, dec]);
-
-	const decDomainValue = useMemo(() => {
-		return domainValue.map((item) =>
-			ethers.utils.parseUnits(item.toString(), dec).toString()
-		);
-	}, [domainValue, dec]);
 
 	const changeImpermant = useCallback((impermanent) => {
 		setImpermanent(impermanent);

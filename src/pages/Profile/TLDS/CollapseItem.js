@@ -3,7 +3,7 @@ import { memo, useCallback, useState } from 'react';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PriceModule from '../../../components/ManageDomain/PriceModule';
 
-const CollapseItem = ({ item, selected, onClick }) => {
+const CollapseItem = ({ item, tld, selected, onClick }) => {
 	const [show, setShow] = useState(false);
 	const hiddenDomain = useCallback(() => {
 		setShow(false);
@@ -11,8 +11,8 @@ const CollapseItem = ({ item, selected, onClick }) => {
 
 	const chooseDomain = useCallback(() => {
 		setShow(true);
-		onClick && onClick(item);
-	}, [onClick, item]);
+		onClick && onClick(tld);
+	}, [onClick, tld]);
 
 	return (
 		<Box
@@ -53,7 +53,7 @@ const CollapseItem = ({ item, selected, onClick }) => {
 			</Stack>
 
 			<Collapse in={show && selected}>
-				<PriceModule />
+				<PriceModule domain={tld} />
 			</Collapse>
 		</Box>
 	);
