@@ -106,11 +106,6 @@ const StepOne = ({ onDisabledChange }) => {
 		setImpermanent(impermanent);
 	}, []);
 
-	const arrPayment = useMemo(
-		() => new Array(conditionLen).fill(tokenForContract['USDT']),
-		[conditionLen]
-	);
-
 	const { write, isLoading, isSuccess } = useWriteContract({
 		functionName: 'setTld',
 		args: [
@@ -118,7 +113,7 @@ const StepOne = ({ onDisabledChange }) => {
 			receivingAddress,
 			condition,
 			decDomainValue,
-			arrPayment,
+			[tokenForContract['USDT']],
 			!impermanent,
 		],
 		enabled: !!tldName,
