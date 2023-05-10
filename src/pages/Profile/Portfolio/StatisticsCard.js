@@ -9,6 +9,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 	height: 118,
 	boxShadow:
 		'0px 14px 28px -80px rgba(23, 12, 86, 0.02), 8px 0px 33px rgba(30, 21, 81, 0.05)',
+	marginTop: '20px',
 }));
 
 const Price = styled(Typography)(({ theme }) => ({
