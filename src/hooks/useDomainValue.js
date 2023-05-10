@@ -3,13 +3,15 @@ import { formatUnitsWithDec } from '../utils';
 import { digitsDifferentLengthToDefaultPrice } from '../config/profilePageSetting';
 import { ethers } from 'ethers';
 
-const useDomainValue = ({ tokens, prices, dec, value }) => {
+const useDomainValue = ({ prices, dec, value }) => {
 	const domainValue = useMemo(() => {
-		if (!tokens || tokens.length <= 0 || !prices) {
-			return !value ? [...digitsDifferentLengthToDefaultPrice] : value;
+		if (!value && !prices) {
+			return [...digitsDifferentLengthToDefaultPrice];
 		}
-		return prices && prices.map((item) => formatUnitsWithDec(item, dec));
-	}, [tokens, value, prices, dec]);
+		return (
+			value || (prices && prices.map((item) => formatUnitsWithDec(item, dec)))
+		);
+	}, [value, prices, dec]);
 
 	const decDomainValue = useMemo(() => {
 		return domainValue.map((item) =>

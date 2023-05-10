@@ -46,7 +46,6 @@ const StepOne = ({ onDisabledChange }) => {
 	});
 
 	const { domainValue, decDomainValue } = useDomainValue({
-		tokens,
 		prices,
 		dec,
 		value,

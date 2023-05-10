@@ -4,7 +4,6 @@ import { Box, Stack, Switch, Typography, styled, Input } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { LoadingButton } from '@mui/lab';
 import useDomainPrice from '../../hooks/useDomainPrice';
-import useGetTokens from '../../hooks/useGetTokens';
 import { useAccount, useToken } from 'wagmi';
 import { tokenForContract } from '../../config/profilePageSetting';
 import useDomainValue from '../../hooks/useDomainValue';
@@ -23,14 +22,12 @@ const IconTips = styled(ErrorOutlineIcon)(() => ({
 
 const PriceModule = ({ domain }) => {
 	const { address } = useAccount();
-	const [impermanent, setImpermanent] = useState(false);
+	const [impermanent, setImpermanent] = useState(null);
 
 	const changeImpermant = useCallback((impermanent) => {
 		setImpermanent(impermanent);
 	}, []);
-	const tokens = useGetTokens({
-		tldName: domain,
-	});
+
 	const { isPermanemt, prices, condition } = useDomainPrice({
 		impermanent,
 		tldName: domain,
@@ -46,7 +43,6 @@ const PriceModule = ({ domain }) => {
 	}, []);
 
 	const { domainValue, decDomainValue } = useDomainValue({
-		tokens,
 		prices,
 		dec,
 		value,
@@ -71,16 +67,20 @@ const PriceModule = ({ domain }) => {
 			condition,
 			decDomainValue,
 			[tokenForContract['USDT']],
-			!impermanent,
+			impermanent !== null ? !impermanent : isPermanemt,
 		],
 		enabled: !!domain,
 	});
+
+	const confirmSetting = useCallback(() => {
+		write?.();
+	}, [write]);
 
 	return (
 		<Stack direction="column">
 			<SettingPart
 				domainValue={domainValue}
-				settingType={2}
+				settingType={1}
 				impermanent={!isPermanemt}
 				isSuccess={isSuccess}
 				isLoading={isLoading}
@@ -117,7 +117,13 @@ const PriceModule = ({ domain }) => {
 				</Stack>
 			</Box>
 			<Stack sx={{ mt: 6, mb: 3 }} direction="row" justifyContent="center">
-				<LoadingButton variant="contained">Updata</LoadingButton>
+				<LoadingButton
+					loading={isLoading}
+					variant="contained"
+					onClick={confirmSetting}
+				>
+					Updata
+				</LoadingButton>
 			</Stack>
 		</Stack>
 	);

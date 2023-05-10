@@ -28,12 +28,12 @@ const useDomainPrice = ({ tldName, impermanent }) => {
 		let arr = new Array(conditionLen).fill(0);
 		return arr.map((_, index) =>
 			keccakCondition([
-				!impermanent,
+				impermanent !== null ? !impermanent : isPermanemt,
 				digitsLength[index] === '4+' ? 5 : parseInt(digitsLength[index]),
 				tokenForContract['USDT'],
 			])
 		);
-	}, [conditionLen, impermanent]);
+	}, [conditionLen, impermanent, isPermanemt]);
 
 	// get price
 	const getPricesArgs = useMemo(() => {
