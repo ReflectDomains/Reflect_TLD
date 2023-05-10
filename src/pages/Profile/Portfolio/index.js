@@ -8,7 +8,6 @@ import StatisticsCard from './StatisticsCard';
 import { useCallback, useEffect, useState } from 'react';
 import LineBarChart from './LineBarChart';
 import { tldChart } from '../../../api/profile';
-import { useAccount } from 'wagmi';
 
 const dates = [
 	{ period: 'weekly', text: 'Week' },
@@ -17,7 +16,6 @@ const dates = [
 
 const Portfolio = () => {
 	const [times, setTimes] = useState('weekly');
-	const { address } = useAccount();
 	const [chartData, setChartData] = useState([]);
 
 	const handleChangeDate = useCallback((event, newValue) => {
@@ -29,12 +27,12 @@ const Portfolio = () => {
 
 	const getChart = useCallback(async () => {
 		const resp = await tldChart({
-			period: 'weekly',
+			period: times,
 		});
 		if (resp?.code === 0 && resp?.data?.chart) {
 			setChartData(resp?.data?.chart);
 		}
-	}, [times, address]);
+	}, [times]);
 
 	useEffect(() => {
 		getChart();
