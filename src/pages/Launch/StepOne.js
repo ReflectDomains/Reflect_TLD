@@ -49,6 +49,7 @@ const StepOne = ({ onDisabledChange }) => {
 		prices,
 		dec,
 		value,
+		isPermanemt,
 	});
 
 	const changeImpermant = useCallback((impermanent) => {
