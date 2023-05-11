@@ -1,36 +1,46 @@
 import {
-	Box,
 	Stack,
 	Typography,
-	styled,
 	ToggleButton,
 	ToggleButtonGroup,
 } from '@mui/material';
 import StatisticsCard from './StatisticsCard';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import LineBarChart from './LineBarChart';
+import { tldChart } from '../../../api/profile';
 
-const StatisticsWrapper = styled(Box)(({ theme }) => ({
-	display: 'grid',
-	gridTemplateColumns: '1fr 1fr',
-	gap: theme.spacing(1),
-}));
-
-const dates = ['24H', '7D', '30D', 'ALL'];
+const dates = [
+	{ period: 'weekly', text: 'Week' },
+	{ period: 'monthly', text: 'Month' },
+];
 
 const Portfolio = () => {
-	const [times, setTimes] = useState('ALL');
+	const [times, setTimes] = useState('weekly');
+	const [chartData, setChartData] = useState([]);
 
-	const handleChangeDate = useCallback((event, nextView) => {
-		setTimes(event.target.value);
+	const handleChangeDate = useCallback((event, newValue) => {
+		console.log('newValue:', newValue);
+		if (newValue) {
+			setTimes(newValue);
+		}
 	}, []);
+
+	const getChart = useCallback(async () => {
+		const resp = await tldChart({
+			period: times,
+		});
+		if (resp?.code === 0 && resp?.data?.chart) {
+			setChartData(resp?.data?.chart);
+		}
+	}, [times]);
+
+	useEffect(() => {
+		getChart();
+	}, [getChart]);
 
 	return (
 		<>
-			<StatisticsWrapper mt={2}>
-				<StatisticsCard type="domain" />
-			</StatisticsWrapper>
-
+			<StatisticsCard type="domain" />
 			<Stack
 				direction="row"
 				justifyContent="space-between"
@@ -49,18 +59,19 @@ const Portfolio = () => {
 					sx={{
 						height: '37px',
 					}}
+					exclusive
 					value={times}
 					onChange={handleChangeDate}
 				>
 					{dates.map((item) => (
-						<ToggleButton value={item} key={item}>
-							{item}
+						<ToggleButton value={item.period} key={item.period}>
+							{item.text}
 						</ToggleButton>
 					))}
 				</ToggleButtonGroup>
 			</Stack>
 
-			<LineBarChart />
+			<LineBarChart data={chartData} type={times} />
 		</>
 	);
 };
