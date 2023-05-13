@@ -1,6 +1,6 @@
 import { Stack, Typography, styled } from '@mui/material';
-import PopularDomainCard from './PopularDomainCard';
-import avatar from '../../assets/images/avatar.png';
+// import PopularDomainCard from './PopularDomainCard';
+// import avatar from '../../assets/images/avatar.png';
 import SearchInput from '../../components/SearchInput';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -16,12 +16,12 @@ const Title = styled(Typography)(() => ({
 	marginTop: '20vh',
 }));
 
-const PopularDomainsText = styled(Typography)(({ theme }) => ({
-	textAlign: 'center',
-	fontSize: '28px',
-	fontWeight: 800,
-	marginTop: theme.spacing(10),
-}));
+// const PopularDomainsText = styled(Typography)(({ theme }) => ({
+// 	textAlign: 'center',
+// 	fontSize: '28px',
+// 	fontWeight: 800,
+// 	marginTop: theme.spacing(10),
+// }));
 
 const Home = () => {
 	const navigate = useNavigate();

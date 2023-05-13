@@ -111,7 +111,10 @@ const SearchInput = ({
 			setSearchValue(value);
 			if (!isOpen) setOpen(true);
 			if (!value && isOpen) setOpen(false);
-			debounceInputChange(value);
+
+			if (value.startsWith('.')) {
+				debounceInputChange(value.replace('.', ''));
+			}
 		},
 		[debounceInputChange, isOpen]
 	);
@@ -182,9 +185,7 @@ const SearchInput = ({
 											justifyContent="center"
 											spacing={1}
 										>
-											{item.status === 'loading' ? (
-												<CircularProgress size={14} thickness={7} />
-											) : (
+											{item.status !== 'loading' && item.status ? (
 												<>
 													<RegisterStatus status={item.status}>
 														{item.status}
@@ -195,6 +196,8 @@ const SearchInput = ({
 														})}
 													/>
 												</>
+											) : (
+												<CircularProgress size={14} thickness={7} />
 											)}
 										</Stack>
 									</PopoverListItem>
