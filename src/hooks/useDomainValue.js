@@ -6,7 +6,9 @@ const yearToSecond = 31536000;
 
 const useDomainValue = ({ prices, dec, value, isPermanemt }) => {
 	const domainValue = useMemo(() => {
-		if (!value && !prices) {
+		const len = prices.length;
+		const zeroArr = prices.filter((v) => v.toString() === '0');
+		if (!value && (!prices || len === zeroArr.length)) {
 			return [...digitsDifferentLengthToDefaultPrice];
 		}
 		return (
@@ -33,7 +35,6 @@ const useDomainValue = ({ prices, dec, value, isPermanemt }) => {
 			return 0;
 		});
 	}, [domainValue, dec, isPermanemt]);
-	console.log(domainValue, decDomainValue, 'domain value');
 
 	return {
 		domainValue,

@@ -19,7 +19,7 @@ export const keccakCondition = (arg) =>
 	ethers.utils.solidityKeccak256(['bool', 'uint256', 'address'], [...arg]);
 
 export const formatUnitsWithDec = (n, d) => {
-	if (!n) return '';
+	if (!n) return 0;
 	return ethers.utils.formatUnits(n?.toString(), d ?? 0)?.toString();
 };
 
