@@ -38,6 +38,7 @@ const Home = () => {
 
 	const chooseDomain = useCallback(
 		(item) => {
+			console.log('item:', item);
 			if (item.status === 'Available') {
 				navigate(`/launch/${item.name}`);
 			}

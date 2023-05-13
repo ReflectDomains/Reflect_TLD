@@ -108,12 +108,12 @@ const SearchInput = ({
 	const handleChange = useCallback(
 		(e) => {
 			const value = e.target.value;
-			setSearchValue(value);
-			if (!isOpen) setOpen(true);
-			if (!value && isOpen) setOpen(false);
 
-			if (value.startsWith('.')) {
-				debounceInputChange(value.replace('.', ''));
+			if (/^[^\W_]*$/.test(value)) {
+				setSearchValue(value);
+				if (!isOpen && value.length >= 3) setOpen(true);
+				if (!value && isOpen) setOpen(false);
+				debounceInputChange(value);
 			}
 		},
 		[debounceInputChange, isOpen]

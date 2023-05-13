@@ -30,7 +30,7 @@ const routes = [
 				needConnected: true,
 			},
 			{
-				path: 'Launch/:name',
+				path: 'launch/:name',
 				element: <Launch />,
 				needConnected: true,
 			},
