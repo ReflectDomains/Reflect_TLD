@@ -77,9 +77,9 @@ const Home = () => {
 				/>
 			</Stack>
 
-			<PopularDomainsText>🔥 Recommended TLDs</PopularDomainsText>
+			{/* <PopularDomainsText>🔥 Recommended TLDs</PopularDomainsText> */}
 
-			<Stack
+			{/* <Stack
 				direction="row"
 				justifyContent="space-between"
 				alignItems="center"
@@ -89,7 +89,7 @@ const Home = () => {
 				<PopularDomainCard avatar={avatar} name="meta.eth" cup={'🥈'} />
 				<PopularDomainCard avatar={avatar} name="reflect.eth" cup={'🥉'} />
 				<PopularDomainCard avatar={avatar} name="sns.eth" />
-			</Stack>
+			</Stack> */}
 		</>
 	);
 };
